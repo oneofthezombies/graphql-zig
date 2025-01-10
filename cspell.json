@@ -1,0 +1,11 @@
+{
+  "enabledFileTypes": {
+    "typescript": true,
+    "zig": true
+  },
+  "ignorePaths": [
+    ".devcontainer/devcontainer.json",
+    ".devcontainer/Dockerfile"
+  ],
+  "words": ["comptime", "deinit", "gitmoji", "usize", "zigraphql"]
+}
