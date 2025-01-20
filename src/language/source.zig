@@ -12,7 +12,7 @@ pub const Location = struct {
 pub const Source = struct {
     pub const Args = struct {
         name: []const u8 = "GraphQL request",
-        location_offset: Location = Location{
+        location_offset: Location = .{
             .line = 1,
             .column = 1,
         },
