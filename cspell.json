@@ -7,5 +7,13 @@
     ".devcontainer/devcontainer.json",
     ".devcontainer/Dockerfile"
   ],
-  "words": ["comptime", "deinit", "gitmoji", "usize", "zigraphql", "codepoint"]
+  "words": [
+    "codepoint",
+    "comptime",
+    "deinit",
+    "gitmoji",
+    "usize",
+    "zigra",
+    "zigraphql"
+  ]
 }

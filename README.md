@@ -1,8 +1,8 @@
 # ZigraphQL
 
-<img src="images/mascot.webp" alt="mascot" style="width: 300px;">
+ZigraphQL is a Zig implementation of GraphQL.
 
-ZigraphQL is an implementation of GraphQL in Zig.
+<img src="images/zigra.png" alt="zigra" style="width: 300px;">
 
 ## Contributing
 
