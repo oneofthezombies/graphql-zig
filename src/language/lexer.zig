@@ -1,33 +1,33 @@
 const std = @import("std");
-const assert = std.debug.assert;
-const unicode = std.unicode;
-const utf8Decode = unicode.utf8Decode;
-const utf8CodepointSequenceLength = unicode.utf8CodepointSequenceLength;
+const Allocator = std.mem.Allocator;
+const utf8Decode = std.unicode.utf8Decode;
+const utf8ByteSequenceLength = std.unicode.utf8ByteSequenceLength;
+const utf8CodepointSequenceLength = std.unicode.utf8CodepointSequenceLength;
+
 const Source = @import("source.zig").Source;
 const Token = @import("ast.zig").Token;
 const TokenKind = @import("token_kind.zig").TokenKind;
 
 pub const Lexer = struct {
-    allocator: *std.mem.Allocator,
+    allocator: *Allocator,
     source: *Source,
-    last_token: *Token,
-    token: *Token,
+    last_token: ?*Token = null,
+    token: ?*Token = null,
     line: usize,
     line_start: usize,
 
-    pub fn init(allocator: *std.mem.Allocator, source: *Source) Lexer {
+    pub fn init(allocator: *Allocator, source: *Source) Lexer {
         const start_of_file_token = try allocator.create(Token);
-        start_of_file_token.* = Token.init(
-            TokenKind.SOF,
-            0,
-            0,
-            0,
-            0,
-            null,
-        );
-        return Lexer{
+        start_of_file_token.* = .{
+            .kind = TokenKind.SOF,
+            .start = 0,
+            .end = 0,
+            .line = 0,
+            .column = 0,
+            .value = null,
+        };
+        return .{
             .source = source,
-            .last_token = null,
             .token = start_of_file_token,
             .line = 1,
             .line_start = 0,
@@ -73,7 +73,8 @@ pub const Lexer = struct {
         const body = self.source.body;
         var position = start;
         while (position < body.len) {
-            const codepoint = try utf8Decode(body[position..]);
+            const byte_seq_len = try utf8ByteSequenceLength(body[position]);
+            const codepoint = try utf8Decode(body[position .. position + byte_seq_len]);
             switch (codepoint) {
                 // Ignored ::
                 //   - UnicodeBOM
