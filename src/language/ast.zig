@@ -1,7 +1,7 @@
+const expect = @import("std").testing.expect;
+const expectEqualStrings = @import("std").testing.expectEqualStrings;
+
 const TokenKind = @import("token_kind.zig").TokenKind;
-const testing = @import("std").testing;
-const expect = testing.expect;
-const expectEqualStrings = testing.expectEqualStrings;
 
 pub const Token = struct {
     kind: TokenKind,
@@ -9,40 +9,20 @@ pub const Token = struct {
     end: usize,
     line: usize,
     column: usize,
-    value: []const u8,
-    prev: ?*Token,
-    next: ?*Token,
-
-    pub fn init(
-        kind: TokenKind,
-        start: usize,
-        end: usize,
-        line: usize,
-        column: usize,
-        value: []const u8,
-    ) Token {
-        return Token{
-            .kind = kind,
-            .start = start,
-            .end = end,
-            .line = line,
-            .column = column,
-            .value = value,
-            .prev = null,
-            .next = null,
-        };
-    }
+    value: ?[]const u8,
+    prev: ?*Token = null,
+    next: ?*Token = null,
 };
 
 test "Token" {
-    const token = Token.init(
-        TokenKind.NAME,
-        0,
-        4,
-        1,
-        1,
-        "Name",
-    );
+    const token: Token = .{
+        .name = TokenKind.NAME,
+        .start = 0,
+        .end = 4,
+        .line = 1,
+        .column = 1,
+        .value = "Name",
+    };
     try expect(token.kind == TokenKind.NAME);
     try expect(token.start == 0);
     try expect(token.end == 4);
