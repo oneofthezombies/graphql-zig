@@ -42,7 +42,7 @@ RUN echo '# JavaScript' >> ~/.bashrc && \
     node@22.13.0 \
     npm@11.0.0 \
     deno@v2.1.6 \
-    gitmoji-cli@5.3.0 \
+    gitmoji-cli@9.5.0 \
     && echo '' >> ~/.bashrc
 
 RUN echo '# Aliases' >> ~/.bashrc && \
