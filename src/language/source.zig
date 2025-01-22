@@ -4,13 +4,13 @@ const testing = std.testing;
 const expect = testing.expect;
 const expectEqualStrings = testing.expectEqualStrings;
 
-pub const Location = struct {
+const Location = struct {
     line: usize,
     column: usize,
 };
 
-pub const Source = struct {
-    pub const Args = struct {
+const Source = struct {
+    const Args = struct {
         name: []const u8 = "GraphQL request",
         location_offset: Location = .{
             .line = 1,
@@ -22,7 +22,7 @@ pub const Source = struct {
     name: []const u8,
     location_offset: Location,
 
-    pub fn init(body: []const u8, args: Args) Source {
+    fn init(body: []const u8, args: Args) Source {
         assert(args.location_offset.line > 0);
         assert(args.location_offset.column > 0);
         return Source{
@@ -33,12 +33,12 @@ pub const Source = struct {
     }
 };
 
-pub const SourceTag = union(enum) {
+const SourceTag = union(enum) {
     string: []const u8,
     source: *Source,
 };
 
-pub fn isSource(tag: SourceTag) bool {
+fn isSource(tag: SourceTag) bool {
     switch (tag) {
         .string => return false,
         .source => return true,

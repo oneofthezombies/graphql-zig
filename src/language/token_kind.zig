@@ -1,6 +1,6 @@
-const eql = @import("std").mem.eql;
+const mem = @import("std").mem;
 
-pub const TokenKind = enum(u8) {
+const TokenKind = enum(u8) {
     SOF,
     EOF,
     BANG,
@@ -24,7 +24,7 @@ pub const TokenKind = enum(u8) {
     BLOCK_STRING,
     COMMENT,
 
-    pub fn toString(self: TokenKind) []const u8 {
+    fn toString(self: TokenKind) []const u8 {
         switch (self) {
             TokenKind.SOF => "<SOF>",
             TokenKind.EOF => "<EOF>",
@@ -51,50 +51,50 @@ pub const TokenKind = enum(u8) {
         }
     }
 
-    pub fn fromString(s: []const u8) ?TokenKind {
-        if (eql(u8, s, "<SOF>")) {
+    fn fromString(s: []const u8) ?TokenKind {
+        if (mem.eql(u8, s, "<SOF>")) {
             return TokenKind.SOF;
-        } else if (eql(u8, s, "<EOF>")) {
+        } else if (mem.eql(u8, s, "<EOF>")) {
             return TokenKind.EOF;
-        } else if (eql(u8, s, "!")) {
+        } else if (mem.eql(u8, s, "!")) {
             return TokenKind.BANG;
-        } else if (eql(u8, s, "$")) {
+        } else if (mem.eql(u8, s, "$")) {
             return TokenKind.DOLLAR;
-        } else if (eql(u8, s, "&")) {
+        } else if (mem.eql(u8, s, "&")) {
             return TokenKind.AMP;
-        } else if (eql(u8, s, "(")) {
+        } else if (mem.eql(u8, s, "(")) {
             return TokenKind.PAREN_L;
-        } else if (eql(u8, s, ")")) {
+        } else if (mem.eql(u8, s, ")")) {
             return TokenKind.PAREN_R;
-        } else if (eql(u8, s, "...")) {
+        } else if (mem.eql(u8, s, "...")) {
             return TokenKind.SPREAD;
-        } else if (eql(u8, s, ":")) {
+        } else if (mem.eql(u8, s, ":")) {
             return TokenKind.COLON;
-        } else if (eql(u8, s, "=")) {
+        } else if (mem.eql(u8, s, "=")) {
             return TokenKind.EQUALS;
-        } else if (eql(u8, s, "@")) {
+        } else if (mem.eql(u8, s, "@")) {
             return TokenKind.AT;
-        } else if (eql(u8, s, "[")) {
+        } else if (mem.eql(u8, s, "[")) {
             return TokenKind.BRACKET_L;
-        } else if (eql(u8, s, "]")) {
+        } else if (mem.eql(u8, s, "]")) {
             return TokenKind.BRACKET_R;
-        } else if (eql(u8, s, "{")) {
+        } else if (mem.eql(u8, s, "{")) {
             return TokenKind.BRACE_L;
-        } else if (eql(u8, s, "|")) {
+        } else if (mem.eql(u8, s, "|")) {
             return TokenKind.PIPE;
-        } else if (eql(u8, s, "}")) {
+        } else if (mem.eql(u8, s, "}")) {
             return TokenKind.BRACE_R;
-        } else if (eql(u8, s, "Name")) {
+        } else if (mem.eql(u8, s, "Name")) {
             return TokenKind.NAME;
-        } else if (eql(u8, s, "Int")) {
+        } else if (mem.eql(u8, s, "Int")) {
             return TokenKind.INT;
-        } else if (eql(u8, s, "Float")) {
+        } else if (mem.eql(u8, s, "Float")) {
             return TokenKind.FLOAT;
-        } else if (eql(u8, s, "String")) {
+        } else if (mem.eql(u8, s, "String")) {
             return TokenKind.STRING;
-        } else if (eql(u8, s, "BlockString")) {
+        } else if (mem.eql(u8, s, "BlockString")) {
             return TokenKind.BLOCK_STRING;
-        } else if (eql(u8, s, "Comment")) {
+        } else if (mem.eql(u8, s, "Comment")) {
             return TokenKind.COMMENT;
         } else {
             return null;

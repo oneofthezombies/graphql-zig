@@ -3,7 +3,7 @@ const expectEqualStrings = @import("std").testing.expectEqualStrings;
 
 const TokenKind = @import("token_kind.zig").TokenKind;
 
-pub const Token = struct {
+const Token = struct {
     kind: TokenKind,
     start: usize,
     end: usize,

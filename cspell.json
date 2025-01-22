@@ -11,6 +11,7 @@
     "codepoint",
     "comptime",
     "deinit",
+    "feff",
     "gitmoji",
     "usize",
     "zigra",

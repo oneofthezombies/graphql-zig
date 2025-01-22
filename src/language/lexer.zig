@@ -8,15 +8,20 @@ const Source = @import("source.zig").Source;
 const Token = @import("ast.zig").Token;
 const TokenKind = @import("token_kind.zig").TokenKind;
 
-pub const Lexer = struct {
+fn a(source: []const u8, position: usize) !u32 {
+    const byte_seq_len = try utf8ByteSequenceLength(body[position]);
+    const codepoint = try utf8Decode(body[position .. position + byte_seq_len]);
+}
+
+const Lexer = struct {
     allocator: *Allocator,
     source: *Source,
     last_token: ?*Token = null,
-    token: ?*Token = null,
+    token: *Token,
     line: usize,
     line_start: usize,
 
-    pub fn init(allocator: *Allocator, source: *Source) Lexer {
+    fn init(allocator: *Allocator, source: *Source) Lexer {
         const start_of_file_token = try allocator.create(Token);
         start_of_file_token.* = .{
             .kind = TokenKind.SOF,
@@ -34,7 +39,7 @@ pub const Lexer = struct {
         };
     }
 
-    pub fn deinit(self: *Lexer) void {
+    fn deinit(self: *Lexer) void {
         if (self.last_token) |last_token| {
             self.allocator.destroy(last_token);
             self.last_token = null;
@@ -45,13 +50,13 @@ pub const Lexer = struct {
         }
     }
 
-    pub fn advance(self: *Lexer) !*Token {
+    fn advance(self: *Lexer) !*Token {
         self.last_token = self.token;
         self.token = try self.lookahead();
         return self.token;
     }
 
-    pub fn lookahead(self: *Lexer) !*Token {
+    fn lookahead(self: *Lexer) !*Token {
         var token = self.token;
         if (token.kind != TokenKind.EOF) {
             while (true) {
@@ -76,41 +81,21 @@ pub const Lexer = struct {
             const byte_seq_len = try utf8ByteSequenceLength(body[position]);
             const codepoint = try utf8Decode(body[position .. position + byte_seq_len]);
             switch (codepoint) {
-                // Ignored ::
-                //   - UnicodeBOM
-                //   - WhiteSpace
-                //   - LineTerminator
-                //   - Comment
-                //   - Comma
-                //
-                // UnicodeBOM :: "Byte Order Mark (U+FEFF)"
-                //
-                // WhiteSpace ::
-                //   - "Horizontal Tab (U+0009)"
-                //   - "Space (U+0020)"
-                //
-                // Comma :: ,
-                0xFEFF, // <BOM>
-                0x09, // \t
-                0x20, // <space>
-                0x2C, // ,
+                '\u{feff}', // <BOM>
+                '\t',
+                ' ',
+                ',',
                 => {
                     position += utf8CodepointSequenceLength(codepoint);
                     continue;
                 },
-                // LineTerminator ::
-                //   - "New Line (U+000A)"
-                //   - "Carriage Return (U+000D)" [lookahead != "New Line (U+000A)"]
-                //   - "Carriage Return (U+000D)" "New Line (U+000A)"
-                0x0A, // \n
-                => {
+                '\n' => {
                     position += utf8CodepointSequenceLength(codepoint);
                     self.line += 1;
                     self.line_start = position;
                     continue;
                 },
-                0x0D, // \r
-                => {
+                '\r' => {
                     position += utf8CodepointSequenceLength(codepoint);
                     if (position < body.len) {
                         const next_codepoint = try utf8Decode(body[position..]);
