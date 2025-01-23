@@ -10,5 +10,5 @@ zls --version
 volta --version
 node --version
 npm --version
-deno --version
 gitmoji --version
+tsx --version

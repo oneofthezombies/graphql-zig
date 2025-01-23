@@ -2,7 +2,6 @@
   "customizations": {
     "vscode": {
       "extensions": [
-        "denoland.vscode-deno",
         "donjayamanne.githistory",
         "esbenp.prettier-vscode",
         "GraphQL.vscode-graphql-syntax",
