@@ -20,15 +20,15 @@ const SourceTextError = error{
     InvalidSourceCharacter,
 };
 
-const SourceText = struct {
+pub const SourceText = struct {
     unchecked_utf8: []const u8,
     pos: usize = 0,
 
-    fn init(unchecked_utf8: []const u8) SourceText {
+    pub fn init(unchecked_utf8: []const u8) SourceText {
         return SourceText{ .unchecked_utf8 = unchecked_utf8 };
     }
 
-    fn nextSourceCharacter(self: *SourceText) SourceTextError!?u32 {
+    pub fn nextSourceCharacter(self: *SourceText) SourceTextError!?u32 {
         if (self.pos >= self.unchecked_utf8.len) {
             return null;
         }

@@ -1,6 +1,6 @@
 const mem = @import("std").mem;
 
-const TokenKind = enum(u8) {
+pub const TokenKind = enum(u8) {
     SOF,
     EOF,
     BANG,

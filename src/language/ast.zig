@@ -3,7 +3,7 @@ const expectEqualStrings = @import("std").testing.expectEqualStrings;
 
 const TokenKind = @import("token_kind.zig").TokenKind;
 
-const Token = struct {
+pub const Token = struct {
     kind: TokenKind,
     start: usize,
     end: usize,
@@ -16,7 +16,7 @@ const Token = struct {
 
 test "Token" {
     const token: Token = .{
-        .name = TokenKind.NAME,
+        .kind = TokenKind.NAME,
         .start = 0,
         .end = 4,
         .line = 1,
@@ -28,7 +28,7 @@ test "Token" {
     try expect(token.end == 4);
     try expect(token.line == 1);
     try expect(token.column == 1);
-    try expectEqualStrings("Name", token.value);
+    try expectEqualStrings("Name", token.value.?);
     try expect(token.prev == null);
     try expect(token.next == null);
 }

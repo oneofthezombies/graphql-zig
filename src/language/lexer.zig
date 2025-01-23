@@ -6,14 +6,14 @@ const Token = @import("ast.zig").Token;
 const TokenKind = @import("token_kind.zig").TokenKind;
 
 const Lexer = struct {
-    allocator: *Allocator,
+    allocator: *const Allocator,
     source_text: SourceText,
     last_token: ?*Token,
     token: *Token,
     line: usize,
     line_start_position: usize,
 
-    pub fn init(allocator: *Allocator, unchecked_utf8: []const u8) !Lexer {
+    pub fn init(allocator: *const Allocator, unchecked_utf8: []const u8) !Lexer {
         const token = try allocator.create(Token);
         token.* = .{
             .kind = TokenKind.SOF,
@@ -40,6 +40,12 @@ const Lexer = struct {
             self.last_token = null;
         }
         self.allocator.destroy(self.token);
-        self.token = null;
     }
 };
+
+test "lexer" {
+    const allocator = std.testing.allocator;
+    const source_text = "let a = 1;";
+    var lexer = try Lexer.init(&allocator, source_text);
+    defer lexer.deinit();
+}
