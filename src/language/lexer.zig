@@ -8,14 +8,14 @@ const TokenKind = @import("token_kind.zig").TokenKind;
 const Lexer = struct {
     allocator: *Allocator,
     source_text: SourceText,
-    last_token: ?*Token = null,
+    last_token: ?*Token,
     token: *Token,
     line: usize,
-    line_start: usize,
+    line_start_position: usize,
 
-    fn init(allocator: *Allocator, unchecked_utf8: []const u8) Lexer {
-        const start_of_file_token = try allocator.create(Token);
-        start_of_file_token.* = .{
+    pub fn init(allocator: *Allocator, unchecked_utf8: []const u8) !Lexer {
+        const token = try allocator.create(Token);
+        token.* = .{
             .kind = TokenKind.SOF,
             .start = 0,
             .end = 0,
@@ -23,22 +23,23 @@ const Lexer = struct {
             .column = 0,
             .value = null,
         };
+
         return .{
+            .allocator = allocator,
             .source_text = SourceText.init(unchecked_utf8),
-            .token = start_of_file_token,
+            .last_token = null,
+            .token = token,
             .line = 1,
-            .line_start = 0,
+            .line_start_position = 0,
         };
     }
 
-    fn deinit(self: *Lexer) void {
+    pub fn deinit(self: *Lexer) void {
         if (self.last_token) |last_token| {
             self.allocator.destroy(last_token);
             self.last_token = null;
         }
-        if (self.token) |token| {
-            self.allocator.destroy(token);
-            self.token = null;
-        }
+        self.allocator.destroy(self.token);
+        self.token = null;
     }
 };
